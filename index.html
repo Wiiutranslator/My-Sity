@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Titrik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* РАБОЧИЙ ПРИМЕР С КАРТИНКОЙ (раскомментируйте и замените путь): */
+            background: url('https://community.fastly.steamstatic.com/economy/image/a0b44yVZG6xneuQqGEgxNyzAxlmouy8Ipo0bUlJjRDfF9dQS1eD3AHU-t8xnioHyGdqSZpgsmMIM6FMDdwKSV6ohuVRn3xpXnXuFPMu5QaOT_W7xqY1QEvXe5LL2ipPg_SVWhMx9PoxILcut4_1ALNmhoA/330x192?allow_animated=1') center/cover no-repeat fixed; */
+            
+            /* ТЕКУЩИЙ ФОН (градиент) — замените на строку выше, если хотите фото */
+            background: radial-gradient(circle at 20% 30%, #1a2a3a, #0a0f1a);
+            
+            /* ------------------------------------------------------------------
+               💡 ИНСТРУКЦИЯ:
+               1) Чтобы поставить ФОТО на фон — замените строку с background (выше) на:
+                  background: url('путь_к_вашему_файлу.jpg') center/cover no-repeat fixed;
+               2) Можно использовать jpg, png, webp.
+               3) Пример: background: url('images/mybackground.jpg') center/cover no-repeat fixed;
+               4) Картинка растянется на весь экран и будет красиво смотреться.
+            ------------------------------------------------------------------- */
+            
+            font-family: 'Inter', sans-serif;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* лёгкая глубинная подсветка (не мешает фону) */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at 70% 40%, rgba(255,255,245,0.05), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* главная карточка — прозрачная, чтобы был виден фон */
+        .card {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            background: rgba(30, 35, 55, 0.3);
+            backdrop-filter: blur(24px) saturate(170%);
+            -webkit-backdrop-filter: blur(24px) saturate(170%);
+            border-radius: 3rem;
+            border: 0.5px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.3), 0 0 0 0.5px rgba(255, 255, 255, 0.05) inset;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content {
+            padding: 2.4rem 2.2rem 2.6rem;
+        }
+
+        /* профиль */
+        .profile-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 1.6rem;
+        }
+
+        .avatar-frame {
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #ffffffaa, #c084fcbb);
+            border-radius: 50%;
+            padding: 2.5px;
+            box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .avatar {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 50%;
+            background: rgba(255,255,240,0.1);
+            display: block;
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .nickname {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(125deg, #fff, #e0d6ff, #b5f0ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+            margin-bottom: 0.2rem;
+        }
+
+        .tagline {
+            font-size: 0.95rem;
+            color: #eef2ffcc;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+
+        .tagline i {
+            color: #d9b4ff;
+        }
+
+        /* информационный столб */
+        .info-column {
+            background: rgba(20, 25, 45, 0.3);
+            backdrop-filter: blur(6px);
+            border-radius: 2rem;
+            padding: 1.5rem 2rem;
+            margin: 1.8rem 0 2rem;
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .info-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #f0f3ff;
+            border-left: 4px solid #cba6ff;
+            padding-left: 1rem;
+        }
+
+        .info-title i {
+            color: #e2bdff;
+        }
+
+        .static-text {
+            font-size: 0.98rem;
+            line-height: 1.55;
+            color: #ffffffea;
+            background: rgba(10, 14, 25, 0.4);
+            padding: 1rem 1.2rem;
+            border-radius: 1.5rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+            border: 1px solid rgba(255,255,255,0.12);
+            font-weight: 450;
+        }
+
+        /* соцсети */
+        .socials {
+            margin: 2rem 0 2rem;
+        }
+
+        .socials h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #eef2ffdd;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .social-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(40, 45, 70, 0.5);
+            backdrop-filter: blur(8px);
+            padding: 0.7rem 1.6rem;
+            border-radius: 60px;
+            font-weight: 600;
+            text-decoration: none;
+            color: #f0f2ff;
+            transition: all 0.25s;
+            border: 1px solid rgba(255,255,255,0.25);
+            font-size: 0.9rem;
+        }
+
+        .social-btn i {
+            font-size: 1.4rem;
+        }
+
+        .social-btn:hover {
+            background: rgba(100, 110, 160, 0.65);
+            border-color: rgba(255,255,255,0.55);
+            transform: translateY(-2px);
+        }
+
+        /* идеи + фотографии */
+        .ideas-section {
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(6px);
+            border-radius: 2rem;
+            padding: 1.5rem 1.8rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .ideas-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .ideas-header h3 {
+            font-size: 1.28rem;
+            font-weight: 700;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            color: #f0ebff;
+        }
+
+        .future-note {
+            font-size: 0.7rem;
+            background: rgba(203, 166, 255, 0.25);
+            padding: 5px 12px;
+            border-radius: 40px;
+            color: #e2cbff;
+        }
+
+        .static-ideas {
+            background: rgba(15, 20, 35, 0.45);
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: #fff3e0;
+        }
+
+        /* галерея 3 фото */
+        .photos-gallery {
+            margin-top: 0.5rem;
+        }
+
+        .gallery-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #dfe6ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 3px solid #cba6ff;
+            padding-left: 12px;
+        }
+
+        .photo-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .photo-card {
+            flex: 1;
+            min-width: 160px;
+            background: rgba(20, 25, 45, 0.4);
+            backdrop-filter: blur(4px);
+            border-radius: 1.75rem;
+            padding: 0.9rem 0.8rem 0.9rem 0.8rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+            background: rgba(50, 55, 85, 0.55);
+            border-color: rgba(203, 166, 255, 0.5);
+        }
+
+        .photo-frame {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+            border: 1px solid rgba(255,255,245,0.2);
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-caption {
+            font-size: 0.73rem;
+            font-weight: 500;
+            color: #d5deff;
+            background: rgba(0, 0, 0, 0.4);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            backdrop-filter: blur(2px);
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #aeb9dc;
+            margin-top: 2rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 680px) {
+            .content {
+                padding: 1.6rem;
+            }
+            .nickname {
+                font-size: 2rem;
+            }
+            .avatar {
+                width: 80px;
+                height: 80px;
+            }
+            .profile-row {
+                gap: 1.2rem;
+            }
+            .photo-card {
+                min-width: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="content">
+        <!-- шапка: аватар + никнейм -->
+        <div class="profile-row">
+            <div class="avatar-frame">
+<img class="avatar" src="https://avatars.fastly.steamstatic.com/4ef42d2acdb82299eb64b5441efae8a7f794b187_full.jpg" alt="Titrik" id="avatarImg">
+            </div>
+            <div class="nick-section">
+                <div class="nickname">Titrik</div>
+                <div class="tagline">
+                    <i class="fas fa-sparkle"></i>Геймер · Блогер · 17 лет
+                    <i class="fas fa-circle" style="font-size: 0.25rem;"></i>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- информационный столб (вы сами пишете содержимое) -->
+        <div class="info-column">
+            <div class="info-title">
+                <i class="fas fa-folder-open"></i>
+                <span>Информация</span>
+            </div>
+            <div class="static-text" id="infoTextStatic">
+ 🧊 Hello world<br>
+• Создаю контент и просто живу жизнью школьника<br>
+• Люблю играть в видеоигры<br>
+• Контакты и важные ссылки будут здесь<br><br>
+            </div>
+        </div>
+
+        <!-- соцсети -->
+        <div class="socials">
+            <h3><i class="fas fa-waveform"></i> Мои сети</h3>
+            <div class="social-links">
+                <a href="https://www.youtube.com/@Titrik_Gamer/" target="_blank" rel="noopener noreferrer" class="social-btn youtube">
+                    <i class="fab fa-youtube"></i> YouTube
+                </a>
+                <a href="https://t.me/UnagiTitrik" target="_blank" rel="noopener noreferrer" class="social-btn telegram">
+                    <i class="fab fa-telegram-plane"></i> Telegram
+                </a>
+                <a href="https://steamcommunity.com/id/TitrikYTRus/" target="_blank" rel="noopener noreferrer" class="social-btn steam">
+                    <i class="fab fa-steam"></i> Steam
+                </a>
+            </div>
+        </div>
+
+        <!-- будущие идеи + три фотографии -->
+        <div class="ideas-section">
+            <div class="ideas-header">
+                <h3><i class="fas fa-compass"></i> Чет просто связанное со мною</h3>
+            </div>
+            <div class="static-ideas" id="ideasTextStatic">
+                🌊 <strong>Я люблю играть</strong> — Чива 5, Марио, just dance<br>
+                🎨 <strong>Сделать страницу</strong> для моих будущих проэктов <br>
+                🚀 <strong>Мб вести нормально тгк</strong> <br>
+            </div>
+
+            <!-- 3 слота для ваших фото (замените src) -->
+            <div class="photos-gallery">
+                <div class="gallery-title">
+                    <i class="fas fa-images"></i> 3 кадра рандомные нахооой
+                </div>
+                <div class="photo-grid">
+                    <div class="photo-card">
+                        <div class="photo-frame">
+                            <img src="https://placehold.co/500x500/2b2f4e/d9cbff?text=кадр+1" alt="фото 1">
+                        </div>
+                        <div class="photo-caption">проект А</div>
+                    </div>
+                    <div class="photo-card">
+                        <div class="photo-frame">
+                            <img src="https://placehold.co/500x500/2b2f4e/d9cbff?text=кадр+2" alt="фото 2">
+                        </div>
+                        <div class="photo-caption">концепт</div>
+                    </div>
+                    <div class="photo-card">
+                        <div class="photo-frame">
+                            <img src="https://placehold.co/500x500/2b2f4e/d9cbff?text=кадр+3" alt="фото 3">
+                        </div>
+                        <div class="photo-caption">вдохновение</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer>
+            Titrik · визитка
+        </footer>
+    </div>
+</div>
+
+<script>
+    }
+</script>
+</body>
+</html>
